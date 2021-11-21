@@ -2,9 +2,34 @@ import React, { useState, useEffect, useRef } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import ReactHtmlParser from 'react-html-parser';
-import { patienceDiff } from './diff';
+
+import diff from './diffhtml';
+
+let state = `
+  <p>Hello Batman, decide what to do:</p>
+  <table>
+  <tbody>
+  <tr>
+  <td>s</td>
+  <td>a</td>
+  <td>b1</td>
+  </tr>
+  <tr>
+  <td>s</td>
+  <td>y</td>
+  <td>x</td>
+  </tr>
+  <tr>
+  <td>s</td>
+  <td>1</td>
+  <td>2</td>
+  </tr>
+  </tbody>
+  </table>
+  <ul><li>Kill The Joker</li><li>Save Thalia Al Gul</li><li>Save Gotham</li></ul><h4>I am a heading 4</h4>
+`;
 const App = () => {
-	const [editor, setEditor] = useState('asas');
+	const [editor, setEditor] = useState(state);
 	const [data, setdata] = useState('');
 	function usePrevious(value) {
 		const ref = useRef();
@@ -14,42 +39,18 @@ const App = () => {
 		return ref.current;
 	}
 
-	const prevState = usePrevious(editor) || '';
-	useEffect(() => {
-		// console.log(prevState, editor);
-		let a = prevState;
-
-		let b = editor;
-
-		let difference = patienceDiff(a.split(''), b.split(''));
-		console.log(difference.lines);
-		let len = difference.lines.length;
-		difference.lines.forEach((line, index) => {
-			if (line.aIndex === -1) {
-				console.log("<span class='highlight>", b, '</span>');
-				setdata(`<div class="highlight">${b}</div>`);
-			}
-		});
-	}, [editor]);
-	var myHTML = "<div><h1>Jimbo.</h1>\n<p>That's what she said</p></div>";
-
-	var strippedHtml = editor.replace(/<[^>]+>/g, '');
-
-	// Jimbo.
-	// That's what she said
-	// console.log(strippedHtml);
 	return (
 		<div className='App'>
 			<CKEditor
 				editor={ClassicEditor}
-				data='<p>start typing ....</p>'
+				data={editor}
 				onChange={(event, editor) => {
 					const data = editor.getData();
 					setEditor(data);
 				}}
 			/>
 
-			<div> {ReactHtmlParser(data)}</div>
+			<div> {ReactHtmlParser(diff(state, editor))}</div>
 		</div>
 	);
 };

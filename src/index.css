@@ -15,3 +15,16 @@ code {
 .highlight {
 	background-color: red;
 }
+
+ins {
+	background-color: #d4edda;
+	/* color: #155724; */
+	/* color: yellow; */
+	background-color: yellow;
+}
+del {
+	background-color: #f8d7da;
+	/* color: #721c24; */
+	/* color: red; */
+	background-color: red;
+}
